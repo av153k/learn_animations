@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:learn_animations/animations/painters/shape_painter.dart';
+import 'package:learn_animations/animations/polygons/polygons.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -15,7 +17,32 @@ class _HomePageState extends State<HomePage> {
         title: Text("Learn Animations"),
         centerTitle: true,
       ),
-      body: Container(),
+      body: Column(
+        children: [
+          ListTile(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Polygons(),
+                ),
+              );
+            },
+            title: Text(
+              "Polygons",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            leading: Icon(
+              Icons.square_foot_outlined,
+              size: 30,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
