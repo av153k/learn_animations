@@ -12,15 +12,19 @@ class Polygons extends StatefulWidget {
 class _PolygonsState extends State<Polygons> with TickerProviderStateMixin {
   AnimationController _controller;
   Animation<double> _animation;
+  AnimationController _sizeController;
+  Animation<double> _sizeAnimation;
   AnimationController _controller2;
   Tween<double> _rotationTween = Tween(
     begin: -maths.pi,
     end: maths.pi,
   );
+  Tween<double> _sizeTween = Tween(
+    begin: 0.0,
+    end: 200.0,
+  );
 
   var _sides = 3.0;
-  var _radius = 100.0;
-  var _radians = 0.0;
   @override
   @override
   void initState() {
@@ -31,10 +35,27 @@ class _PolygonsState extends State<Polygons> with TickerProviderStateMixin {
   @override
   void dispose() {
     _controller.dispose();
+    _sizeController.dispose();
     super.dispose();
   }
 
   setAnimation() {
+    _sizeController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 3),
+    );
+    _sizeAnimation = _sizeTween.animate(_sizeController)
+      ..addListener(() {
+        setState(() {});
+      })
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _sizeController.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          _sizeController.forward();
+        }
+      });
+
     _controller = AnimationController(
       vsync: this,
       duration: Duration(
@@ -53,11 +74,57 @@ class _PolygonsState extends State<Polygons> with TickerProviderStateMixin {
           _controller.forward();
         }
       });
+    _sizeController.forward();
     _controller.forward();
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.circular(50),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 10.0,
+              offset: Offset(
+                10.0,
+                10.0,
+              ),
+            )
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              color: Colors.white,
+              icon: Icon(
+                Icons.add,
+              ),
+              onPressed: () {
+                setState(() {
+                  _sides += 1.0;
+                });
+              },
+            ),
+            IconButton(
+              color: Colors.white,
+              icon: Icon(
+                Icons.remove,
+              ),
+              onPressed: () {
+                setState(() {
+                  if (_sides >= 4.0) {
+                    _sides -= 1.0;
+                  }
+                });
+              },
+            )
+          ],
+        ),
+      ),
       appBar: AppBar(
         title: Text(
           "Polygons",
@@ -77,46 +144,26 @@ class _PolygonsState extends State<Polygons> with TickerProviderStateMixin {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'Sides -> ${_sides.toInt()}',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
             Expanded(
               child: CustomPaint(
                 painter: ShapePainter(
                   _sides,
-                  _radius,
+                  _sizeAnimation.value,
                   _animation.value,
                 ),
                 child: Container(),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: Text('Sides'),
-            ),
-            Slider(
-              value: _sides,
-              min: 3.0,
-              max: 10.0,
-              label: _sides.toInt().toString(),
-              divisions: 7,
-              onChanged: (value) {
-                setState(() {
-                  _sides = value;
-                });
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: Text('Size'),
-            ),
-            Slider(
-              value: _radius,
-              min: 10.0,
-              max: MediaQuery.of(context).size.width / 2,
-              label: _radius.toInt().toString(),
-              onChanged: (value) {
-                setState(() {
-                  _radius = value;
-                });
-              },
             ),
           ],
         ),
