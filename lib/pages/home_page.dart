@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:learn_animations/animations/circleWave/circle_wave.dart';
-import 'package:learn_animations/animations/painters/shape_painter.dart';
 import 'package:learn_animations/animations/polygons/polygons.dart';
+import 'package:learn_animations/animations/raindrop/raindrop_placeholder.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -63,6 +63,29 @@ class _HomePageState extends State<HomePage> {
             leading: Icon(
               Icons.circle,
               color: Colors.black,
+              size: 30,
+            ),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RaindropPlaceholder(),
+                ),
+              );
+            },
+            title: Text(
+              "Rain Drop",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            leading: Icon(
+              Icons.water_damage,
+              color: Colors.blue,
               size: 30,
             ),
           ),

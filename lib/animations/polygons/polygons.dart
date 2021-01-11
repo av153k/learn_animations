@@ -138,7 +138,7 @@ class _PolygonsState extends State<Polygons> with TickerProviderStateMixin {
             Navigator.pop(context);
           },
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.purple,
       ),
       body: SafeArea(
         child: Column(
